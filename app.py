@@ -28,8 +28,8 @@ elif add_selectbox == ('Kvádr'):
     číslo2 = st.number_input('Vepište stranu a')
     číslo3 = st.number_input('Vepište stranu b')
     číslo4 = st.number_input('Vepište stranu c')
-        objem = 
-        plocha = 
+        objem = číslo2*číslo3*číslo4
+        plocha = (2*((číslo2+číslo3)*(číslo3+číslo4)*(číslo2+číslo4))
     st.write(f'Objem je {objem} a plocha je {plocha}')
 
 
