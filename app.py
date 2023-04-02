@@ -10,14 +10,26 @@ if st.button('Click on button'):
 else:
     st.write('nothing to see here')
 
+st.header('Moje aplikace')
+add_selectbox = st.sidebar.selectbox('Menu', ('Čtverec', 'Obdélník', 'Kvádr'))
 
-hodnota = input('Vepište jméno a příjmení')
-hodnota1 = input('datum narpzení')
-
-values = st.slider(
-    'Select a range of values',
-    0., 2020.0, (250, 2000))
-st.write('Values:', values)
-
+if add_selectbox == ('Čtverec'):
+    číslo = int(input('Vepište 1. číslo 1.'))
+        obvod1 = 4*číslo
+        obsah1 = číslo*číslo
+    st.write(f'Obvod je {obvod1} a obsah je {obsah1}')
+elif add_selectbox == ('Obdélník'):
+    číslo1 = input('Vepište stranu a')
+    číslo5 = input('Vepište stranu b')
+        obvod2 = (číslo1+číslo5)*2
+        obsah2 = číslo1*číslo5
+    st.write(f'Obvod je {obvod2} a obsah je {obsah2}')
+elif add_selectbox == ('Kvádr'):
+    číslo2 = st.number_input('Vepište stranu a')
+    číslo3 = st.number_input('Vepište stranu b')
+    číslo4 = st.number_input('Vepište stranu c')
+        objem = 
+        plocha = 
+    st.write(f'Objem je {objem} a plocha je {plocha}')
 
 
