@@ -2,55 +2,67 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 
-st.title('Sklad')
+path = 'Wordertyp.csv'
+path1 = 'Wordernázev.csv'
+path2 = 'Worderamount.csv'
+path3 = 'Worderpozice.csv'
+path4 = 'Worderskupina.csv'
+df_typ = pd.read_csv(path, sep = ';')
+df_název = pd.read_csv(path1, sep = ';')
+df_pozice = pd.read_csv(path3, sep = ';')
+df_celek = pd.read_csv(path4, sep = ';' )
+df_amount = pd.read_csv(path2, sep = ';')
 
-st.container()
-with st.container():
-    přidat1, přidat2 = st.columns([8,1])
-    with přidat2:
-        přidat = st.button('Přidat', key='přidat3')
-
-st.write('tohle je mimo')
-
-if přidat == True:
-    st.container()
+tab1, tab2, tab3 = st.tabs(['Sklad', 'Produkt', 'Typ'])
+with tab1:
+    st.title('Sklad')
+    st.write(df_amount)
+    slp,slp2,slp3 = st.columns([1,2,2])
+    with slp:
+        množství = st.number_input('Vepište množsství', min_value = -10, max_value = 100, value = 0, key='číslo3')
+    with slp2:
+        č1 = st.selectbox('Vyberte číslo produktu', options = df_název['Číslo'])
+    with slp3:
+        p1 = st.selectbox('Vyberte pozici produktu', options = df_pozice['Pozice'])
+    btn_add_celek = st.button('Propojit')
+    if btn_add_celek:
+        df_add_celek = pd.DataFrame(zip([množství], [č1], [p1]))
+        st.write(df_add_celek)
+        df_add_celek.columns = ['Množství', 'Číslo', 'Pozice']
+        df_celek = pd.concat([df_celek, df_add_celek], axis = 0)
+        df_celek = df_celek.groupby(["Číslo", "Pozice"]).sum().reset_index()
+        df_celek.to_csv(path4, sep = ";", index = False)
+        st.experimental_rerun()
+st.write(df_celek)
+with tab2:
+    st.title('Název')
     with st.container():
-        sloupec1, sloupec2 = st.columns([8,1])
-        with sloupec1:
-            with st.container():
-                názv1, type2 = st.columns(2)
-                with názv1: Název = st.text_input('Název produktu', key='Název1')
-                with type2: Typ = st.selectbox('Vyberte typ produktu',('Světla', 'Nářadí', 'Další'), key='Typ1')
-            with st.container():
-                symb1, čísl2 = st.columns(2)
-                with symb1: Symbol = st.text_input('Symbol produktu', key='Symbol1')
-                with čísl2: Číslo = st.number_input('Vepište číslo produktu',0, key='Číslo1')
-            with st.container():
-                col1, col2, col3 = st.columns(3)
-                with col1: Zóna = st.selectbox('Vyberte zónu',('Patro', 'Sklep'), key='Zóna1')
-                with col2: Regál = st.selectbox('Vyberte regál',('One', 'Two'), key='Regál1')
-                with col3: Pozice = st.selectbox('Vyberte pozici',('1B', '1C'), key='Pozice1')
-        with sloupec2: foto = st.button('Přidat foto')
+        sl1, sl2, sl3 = st.columns([1,1,1])
+        with sl1:
+            t1 = st.selectbox('Vyberte Typ produktu', options = df_typ['Typ'])
+        with sl2:
+            Název1 = st.text_input('Vepište Název produktu', key='Název2', max_chars=10)
+        with sl3:
+            číslo = st.number_input('Vepište číslo produktu', value = max(df_název["Číslo"], default = 0) + 1 , key='číslo2', disabled = True)
+        btn_add_produkt = st.button('Přidat_produkt')
+        if btn_add_produkt:
+            df_add_produkt = pd.DataFrame(zip([Název1], [t1], [číslo]))
+            st.write(df_add_produkt)
+            df_add_produkt.columns = ['Název', 'Typ', 'Číslo']
+            df_název = pd.concat([df_název, df_add_produkt], axis = 0)
+            df_název.to_csv(path1, sep = ";", index = False)
+            st.experimental_rerun()
+with tab3:
+    st.title('Typ')
     with st.container():
-        uložit1, storno2, uložit3 = st.columns([6,1,1])
-        with storno2: storno = st.button('Storno', key='storno1')
-        with uložit3: uložit = st.button('Uložit', key='uložit4')
-        if st.session_state.storno1 == True: 
-            st.session_state.přidat3 = False
-        if st.session_state.uložit4 == True: 
-            st.session_state.přidat3 = False
-
-st.session_state.přidat3
-st.session_state.Název1
-st.session_state.Typ1
-st.session_state.Symbol1
-st.session_state.Číslo1
-st.session_state.Zóna1
-st.session_state.Pozice1
-st.session_state.Regál1
-st.session_state.storno1
-
-url = 'https://drive.google.com/file/d/1otRTVWp7W8mOAb1uEoFhfqdRUZz7sCUD/view?usp=share_link'
-path = 'https://drive.google.com/uc?export=download&id='+url.split('/')[-2]
-df_Sklad = pd.read_csv(path)
-st.write(df_Sklad)
+        Typ1 = st.text_input('Vepište Typ', key='Typ2', max_chars=10)
+        with st.container():
+            uložit1, storno2, uložit3 = st.columns([4,1,1])
+            with uložit3: 
+                btn_add_typ = st.button("Uložit")
+        if btn_add_typ:
+            df_add_typ = pd.DataFrame([Typ1])
+            df_add_typ.columns = ['Typ']
+            df_typ = pd.concat([df_typ, df_add_typ], axis = 0)
+            df_typ.to_csv(path, sep = ";", index = False)
+            st.experimental_rerun()
