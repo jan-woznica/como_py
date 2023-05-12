@@ -3,6 +3,7 @@ import pandas as pd
 import numpy as np
 
 st.sidebar.success('Main page')
+
 path = 'Wordertyp.csv'
 path1 = 'Wordernázev.csv'
 path2 = 'Worderamount.csv'
@@ -14,6 +15,5 @@ df_pozice = pd.read_csv(path3, sep = ';')
 df_celek = pd.read_csv(path4, sep = ';' )
 df_amount = pd.read_csv(path2, sep = ';')
 
-df_c1 = df_celek.merge(df_název, how = "inner", on = ["Číslo"]).merge(df_pozice, how = "inner", on = ["Pozice"])
-
-st.write(df_c1) 
+df_c1 = df_celek.merge(df_název, how = "inner", on = ["Název"]).merge(df_pozice, how = "inner", on = ["Pozice"])
+df_c1 = st.experimental_data_editor(df_c1, num_rows="dynamic")

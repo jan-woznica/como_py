@@ -2,8 +2,6 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 
-st.title('Zóny')
-
 #url = 'https://drive.google.com/file/d/1otRTVWp7W8mOAb1uEoFhfqdRUZz7sCUD/view?usp=share_link'
 #path = 'https://drive.google.com/uc?export=download&id='+url.split('/')[-2]
 path = "Worder.csv"
@@ -16,7 +14,7 @@ df_zony = pd.read_csv(path1, sep = ';')
 df_regaly = pd.read_csv(path2, sep = ';')
 df_pozice = pd.read_csv(path3, sep = ';')
 
-tab1, tab2, tab3 = st.tabs(['Zóna', 'Regál', 'Pozice'])
+tab1, tab2, tab3 = st.tabs(['Pozice', 'Regál', 'Zóna'])
 with tab1:
     st.title('Pozice')
     with st.container():
@@ -38,6 +36,8 @@ with tab1:
         df_pozice = pd.concat([df_pozice, df_add_pozice], axis = 0)
         df_pozice.to_csv(path3, sep = ";", index = False)
         st.experimental_rerun()
+    df_zony_filtr = st.experimental_data_editor(df_pozice, num_rows="dynamic")
+    df_zony_filtr.loc[df_pozice['Zóna'].str.contains(st.text_input('Vepište Název Zóny pro vyhledání')),:]
 with tab2:
     st.title('Regály')
     with st.container():
@@ -55,12 +55,11 @@ with tab2:
         df_regaly.to_csv(path2, sep = ";", index = False)
         st.experimental_rerun()
 with tab3:
-    st.title('Zóny')
-    with st.container():
-        Zóna1 = st.text_input('Vepište název Zóny', key='Zóna2', max_chars=5)
     with st.container():
         uložit1, storno2, uložit3 = st.columns([4,1,1])
-        with uložit3: 
+        with uložit1:
+            Zóna1 = st.text_input('Vepište název Zóny pro přidání', key='Zóna2', max_chars=10)
+        with st.container():
             btn_add_zona = st.button("Uložit")
     if btn_add_zona:
         df_add = pd.DataFrame([Zóna1])
@@ -68,3 +67,4 @@ with tab3:
         df_zony = pd.concat([df_zony, df_add], axis = 0)
         df_zony.to_csv(path1, sep = ";", index = False)
         st.experimental_rerun()
+    df_zony.loc[df_zony['Zóna'].str.contains(st.text_input('Vepište Název Zón pro vyhledání')),:]
